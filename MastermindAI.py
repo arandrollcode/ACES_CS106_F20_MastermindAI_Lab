@@ -209,12 +209,12 @@ if __name__ == "__main__":
     for item in code:
         item = int(item)
         result.append(item)
-    code = result
+    code = tuple(result)
     
     while True:
         guessed = ai.make_a_guess()
         ## Print out a guess
-        print('Computer Guess: ' + str(guessed))
+        print('Computer Guess: {0}\tActual Code: {1}'.format(guessed,code))
 
         response = simulate_response(guessed, code)
         print('r')
@@ -225,6 +225,5 @@ if __name__ == "__main__":
     #input('How many numbers are correct?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code,guessed))
     ## Ask how many positions are correct. Read user input.
     #input('How many numbers are in the correct position?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code, guessed))
-
 
     ## Repeat!
