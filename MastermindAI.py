@@ -44,6 +44,20 @@ def guess_to_string(guess):
 
 ## Returns the correctness of a guess and code.
 ## Done for you, no need to modify
+def is_valid_guess(string_guess):
+
+    ## TODO: Check guess to make sure it doesn't break your program
+    ## HINT: https://www.w3schools.com/python/python_ref_string.asp
+    ## HINT: Guess is a string, how do we know it only has numbers?
+    if not string_guess.isnumeric():
+        return False
+    if len(string_guess) != 4:
+        return False
+    for num in string_guess:
+        if int(num) > int(6-1):
+            return False
+    return True
+
 def simulate_response(guess, code):
     ## Make sure that guess and code are the same length
     assert(len(guess) == len(code))
@@ -79,6 +93,7 @@ def simulate_response(guess, code):
 ## Class that will help you breaks Mastermind game codes.
 class MastermindAI:
     def __init__(self):
+        
         self.all_codes = generate_all_codes()
         self.possible_codes = self.all_codes.copy()
         self.previous_guesses   = list()
@@ -111,8 +126,11 @@ class MastermindAI:
         ## ...
         ## And so on
 
-        ## TODO: Code Here
+        ## TODO: Code Here        
         
+        for i in range(0,6):
+            for j in range(0,i+1):
+                empty_response_count[(i,j)] = 0
         
         for guess in self.all_codes:
             ## make a copy of empty_response_count
@@ -124,8 +142,7 @@ class MastermindAI:
                 ## Simulate the response between guess and code
                 ## Increment (add 1) to the response count
                 ## TODO: Code Here
-                nums, pos = stimulate_response(guess, code)
-                response_count += 1
+                response_count[simulate_response(guess, code)] += 1
             ## Apply minmax
             ## If the worst count in response_count (the largest count) is less than (better) our best_worst_response
             ## then it should be the new best_worst_response
@@ -133,16 +150,16 @@ class MastermindAI:
             ## https://www.w3schools.com/python/python_ref_dictionary.asp
             ## https://www.w3schools.com/python/ref_func_max.asp
             ## TODO: Blanks Here
-            if max(response_count) < best_worst_response:
-                best_worst_response = max(response_count)
-                best_guess = _____
+            if max(response_count.values()) < best_worst_response:
+                best_worst_response = max(response_count.values())
+                best_guess = guess
                 
         return best_guess
 
     ## Updates the set of possible codes by checking the response the code gives
     ## if it had been the actual code. If it does not match the response from the
     ## actual code, it cannot possible be the code, so it is removed.
-    def update(self, guess, response):
+    def update(self, guess, response,code):
         ## Add guess and response to previous_guesses and previous_responses
         self.previous_guesses.append(guess)
         self.previous_responses.append(response)
@@ -156,12 +173,14 @@ class MastermindAI:
         ## https://www.w3schools.com/python/python_ref_set.asp
 
         ## TODO: Code Here
-
+        for item in self.possible_codes:
+            if simulate_response(guess, code) != response:
+                remove_set.add(guess)
         ## Remove all codes in remove_set from self.possible_codes
         ## https://www.w3schools.com/python/python_ref_set.asp
 
         ## TODO: One Line of Code Here
-
+        self.possible_codes.difference_update(remove_set)
     ## Reset MastermindAI object to start a new game
     def reset(self):
         self.possible_codes = self.all_codes.copy()
@@ -174,22 +193,38 @@ if __name__ == "__main__":
     ## TODO: Make an interactive bot
     ## Do what ever you want, be creative
 
-    ## Print Introduction and Instructions
-
-
-    ## Wait for human to think of code and press Enter
-
-
     ## Create an MastermindAI object
+    ai = MastermindAI()
 
+    ## Print Introduction and Instructions
+    print('(´･･)ﾉHi! \nThis is an AI that will take your input code, and will determine it in under 5 guesses using an algorithm.')
+    
 
-    ## Print out a guess
+    #_`Wait for human to think of code and press Enter
+    result = list()
+    code = input('Please enter a code: Ex:\'1234\'\n')
+    while not is_valid_guess(code):
+        print('Please enter a valid guess: Ex \'0123\'')
+        code = input()
+    for item in code:
+        item = int(item)
+        result.append(item)
+    code = result
+    
+    while True:
+        guessed = ai.make_a_guess()
+        ## Print out a guess
+        print('Computer Guess: ' + str(guessed))
 
+        response = simulate_response(guessed, code)
+        print('r')
 
+        ai.update(guessed,response,code)
+        print('d')
     ## Ask how many numbers are correct. Read user input.
-
-
+    #input('How many numbers are correct?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code,guessed))
     ## Ask how many positions are correct. Read user input.
+    #input('How many numbers are in the correct position?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code, guessed))
 
 
     ## Repeat!
