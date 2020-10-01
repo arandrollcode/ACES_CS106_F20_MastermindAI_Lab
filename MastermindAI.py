@@ -86,7 +86,7 @@ def simulate_response(guess, code):
         if g == c:
             correct_position += 1
 
-    return correct_nums, correct_position
+    return (correct_nums, correct_position)
 
 ##----------------------------------------------------------------------------##
 
@@ -159,7 +159,7 @@ class MastermindAI:
     ## Updates the set of possible codes by checking the response the code gives
     ## if it had been the actual code. If it does not match the response from the
     ## actual code, it cannot possible be the code, so it is removed.
-    def update(self, guess, response,code):
+    def update(self, guess, response, code):
         ## Add guess and response to previous_guesses and previous_responses
         self.previous_guesses.append(guess)
         self.previous_responses.append(response)
@@ -171,15 +171,15 @@ class MastermindAI:
         ## If the simulated response does not equal the actual response, then it cannot
         ## be a possible code. So we add it to the remove_set.
         ## https://www.w3schools.com/python/python_ref_set.asp
-
         ## TODO: Code Here
-        for item in self.possible_codes:
-            if simulate_response(guess, code) != response:
-                remove_set.add(guess)
+        for thing in self.possible_codes:
+            if simulate_response(thing, code) != response:
+                remove_set.add(thing)
         ## Remove all codes in remove_set from self.possible_codes
         ## https://www.w3schools.com/python/python_ref_set.asp
 
         ## TODO: One Line of Code Here
+        print('remove set: ' + str(remove_set))
         self.possible_codes.difference_update(remove_set)
     ## Reset MastermindAI object to start a new game
     def reset(self):
@@ -211,16 +211,12 @@ if __name__ == "__main__":
         result.append(item)
     code = tuple(result)
     
-    while True:
+    for i in range(0,6):
         guessed = ai.make_a_guess()
         ## Print out a guess
         print('Computer Guess: {0}\tActual Code: {1}'.format(guessed,code))
-
         response = simulate_response(guessed, code)
-        print('r')
-
         ai.update(guessed,response,code)
-        print('d')
     ## Ask how many numbers are correct. Read user input.
     #input('How many numbers are correct?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code,guessed))
     ## Ask how many positions are correct. Read user input.
