@@ -212,7 +212,7 @@ if __name__ == "__main__":
             break
         response = simulate_response(guessed, code)
         ai.update(guessed,response)
-    print('(´･･)ﾉ figured out the code\nThanks for typing a code and pressing enter!')    
+    print('(´･･)ﾉ figured out the code!\nThanks for typing a code and pressing enter!')    
 
     ## Ask how many numbers are correct. Read user input.
     #input('How many numbers are correct?\nYour Code: {0}   Returned Code: {1}\nAnswer: '.format(code,guessed))
